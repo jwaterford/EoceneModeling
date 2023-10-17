@@ -1,0 +1,76 @@
+---
+title: "NetCDF_Attempt"
+author: "James Waterford"
+date: "2023-09-10"
+output: html_document
+---
+
+## NetCdf Installation
+
+NetCdf is a file format widely used for acessing Earth Science Systems data. While the most common applications it is used with are **Java** and **C++**, Packages exist in both [R Studio](https://cirrus.ucsd.edu/~pierce/ncdf/index.html) and [Python](https://unidata.github.io/netcdf4-python/#groups-in-a-netcdf-file).
+
+## R Install
+
+To install in R, you will need both the `ncd4 package`, and the `NetCDF libraries`.
+
+THIS STEP IS NOT REQUIRED AS `ncd4` INCLUDES ALL LIBRARIES
+
+The NetCDF library can be found on the [UCAR](https://downloads.unidata.ucar.edu/netcdf/) website - Download the `netcdf-c-4.9.2.tar.gz` into a location you will remember - From the R-Studio dropdown menu, select: Tools \> Install Packages
+
+```{r}
+# install.packages("ncdf4")
+```
+
+# File Connection
+
+Use `nc_open` to read an existing netCDF file. nc_open(filename, write=FALSE)
+
+For the dataset we are working with today, download from [USAP](https://www.usap-dc.org/view/dataset/601175). Additionally, the author of the USAP file suggests installing [Panoply](https://www.giss.nasa.gov/tools/panoply/download/) for the explanation of variables.
+
+```{r openfile}
+
+gen_atmos_file <- ("LENO2000H_10_yr_avg.nc")
+gen_atmos <- nc_open(gen_atmos_file)
+#print(gen_atmos)
+
+gen_surf_file <- ("LENO2000H_LSX_10_yr_avg.nc")
+gen_surf <- nc_open(gen_surf_file)
+print(gen_surf)
+
+```
+
+In our case, we have 63 variables. Trying to determine all 63 named variables will prove to be a challenge. Use Panolopy to gain some insight.
+
+
+Next Steps
+-----------
+
+ - Gather data temperature around the Drake passage 
+ - You have a period of twelve months.
+ - Extract temperatures over time
+ -Calculate Mean Annual
+
+
+------
+
+Grab values from specifiied long & lat.
+
+Create twelve datasets, one for each month.
+
+Interjoin long and lat over time to create seasonality.
+
+```{r}
+DPTO1 <- read.csv(file = "DrakePassageT_Ocean_Jan.csv", header=TRUE)
+Lat <- colnames(DPTO1)
+cnt <- nrow(DPTO1)
+DPTJan <- data.frame()
+DPTO1 %>%
+  lt <- 
+  DPTJan$lat <- as.string(Lat[i][2:])
+  DPTJan$long <- X[i]
+DPTJan$Jan <- DPTO1$
+  for line in 
+```
+
+
+
