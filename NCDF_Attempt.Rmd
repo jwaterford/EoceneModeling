@@ -88,7 +88,7 @@ library(RColorBrewer)
 This will map all temperature varation across the full dataset.
 ```{r}
 grid <- expand.grid(lon=lon, lat=lat)
-cutpts <- c(0,150,280,290,295,300,302.5,305)
+cutpts <- c(0,150,280,285,290,295,300,302,305)
 levelplot(tmp_slice ~ lon * lat, data=grid, at=cutpts, cuts=9, pretty=T, 
   col.regions=(rev(brewer.pal(9,"YlOrBr"))))
 ```
