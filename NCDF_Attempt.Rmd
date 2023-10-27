@@ -2,7 +2,9 @@
 title: "NetCDF_Attempt"
 author: "James Waterford"
 date: "2023-09-10"
-output: html_document
+output:
+  pdf_document: default
+  html_document: default
 ---
 
 ## NetCdf Installation
@@ -36,8 +38,8 @@ gen_atmos <- nc_open(gen_atmos_file)
 
 gen_surf_file <- ("LENO2000H_LSX_10_yr_avg.nc")
 gen_surf <- nc_open(gen_surf_file)
-print(gen_surf)
-
+# print(gen_surf)
+## Printing this line creates 6 pages in PDF format ##
 ```
 
 In our case, we have 63 variables. Trying to determine all 63 named variables will prove to be a challenge. Use Panolopy to gain some insight.
@@ -45,7 +47,7 @@ In our case, we have 63 variables. Trying to determine all 63 named variables wi
 
 Next Steps
 -----------
-** Create a Dataframe **
+** Create a Data Frame **
 
 Now that we can access the data, we ned to extract the longitude and latitude values of interest from this full data set.
 ## Current Objectives: ##
