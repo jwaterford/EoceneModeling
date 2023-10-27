@@ -19,6 +19,7 @@ The NetCDF library can be found on the [UCAR](https://downloads.unidata.ucar.edu
 
 ```{r}
 # install.packages("ncdf4")
+library(ncdf4)
 ```
 
 # File Connection
@@ -44,33 +45,99 @@ In our case, we have 63 variables. Trying to determine all 63 named variables wi
 
 Next Steps
 -----------
+** Create a Dataframe **
+
+Now that we can access the data, we ned to extract the longitude and latitude values of interest from this full data set.
+## Current Objectives: ##
 
  - Gather data temperature around the Drake passage 
- - You have a period of twelve months.
+ - There are twelve slices for each month
  - Extract temperatures over time
  -Calculate Mean Annual
 
-
-------
-
-Grab values from specifiied long & lat.
-
-Create twelve datasets, one for each month.
-
-Interjoin long and lat over time to create seasonality.
-
+Define Long & Lat
+-----
 ```{r}
-DPTO1 <- read.csv(file = "DrakePassageT_Ocean_Jan.csv", header=TRUE)
-Lat <- colnames(DPTO1)
-cnt <- nrow(DPTO1)
-DPTJan <- data.frame()
-DPTO1 %>%
-  lt <- 
-  DPTJan$lat <- as.string(Lat[i][2:])
-  DPTJan$long <- X[i]
-DPTJan$Jan <- DPTO1$
-  for line in 
+lon <- ncvar_get(gen_surf,"lon")
+lon
+lat <- ncvar_get(gen_surf,"lat")
+lat
 ```
 
+
+
+Create Temp Slice
+------
+```{r}
+ ## Get Ocean Temperature from Surface Data
+dname <- "TOCEAN"
+tmp_array <- ncvar_get(gen_surf,dname)
+
+# get a single slice or layer (January)
+m <- 1
+tmp_slice <- tmp_array[,,m]
+```
+## Map and Map Libraries
+
+```{r}
+library(lattice)
+library(RColorBrewer)
+```
+This will map all temperature varation across the full dataset.
+```{r}
+grid <- expand.grid(lon=lon, lat=lat)
+cutpts <- c(0,150,280,290,295,300,302.5,305)
+levelplot(tmp_slice ~ lon * lat, data=grid, at=cutpts, cuts=9, pretty=T, 
+  col.regions=(rev(brewer.pal(9,"YlOrBr"))))
+```
+Now we need to gather the relevant points into a data frame.
+```{r}
+# create dataframe -- reshape data
+
+
+## Create Full data set from map & temperature
+lonlat <- as.matrix(expand.grid(lon,lat))
+tmp_vec <- as.vector(tmp_slice)
+
+tmp_df01 <- data.frame(cbind(lonlat,tmp_vec))
+names(tmp_df01) <- c("lon","lat",paste(dname,as.character(m), sep="_"))
+
+
+## Subset to Drake Passage 
+## [lon -> 240.00 : 300.00   | lat -> -89.00 : -15.00]
+
+tmp_df01 <- tmp_df01[tmp_df01$lat <= -15 & tmp_df01$lon >= 240 & tmp_df01$lon <= 300,]
+tmp_df01[tmp_df01 == 0] <- NA
+head(na.omit(tmp_df01), 10)
+```
+Using functions to streamline this process.
+------
+
+
+```{r}
+
+lonlat <- as.matrix(expand.grid(lon,lat))
+tmp_df <- data.frame(cbind(lonlat))
+names(tmp_df) <- c("lon","lat")
+
+testr <- function(tmp_df){
+  for (i in 1:12) {
+    m <- i
+    mon <- month.name[i]
+    tmp_slice <- tmp_array[,,m]
+    tmp_vec <- as.vector(tmp_slice)
+    tmp_df[[mon]] <- tmp_vec
+  }
+  tmp_df ->> DP_tmp
+}
+testr(tmp_df)
+DP_tmp <- DP_tmp[DP_tmp$lat <= -15 & DP_tmp$lon >= 240 & DP_tmp$lon <= 300,]
+DP_tmp[DP_tmp == 0] <- NA
+
+head(na.omit(DP_tmp))
+
+write.csv(DP_tmp, "DrakePassageTemps.csv", row.names=FALSE)
+
+```
 
 
