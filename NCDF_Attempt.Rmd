@@ -88,7 +88,7 @@ library(RColorBrewer)
 This will map all temperature varation across the full dataset.
 ```{r}
 grid <- expand.grid(lon=lon, lat=lat)
-cutpts <- c(0,150,280,285,290,295,300,302,305)
+cutpts <- c(0,200,285,290,292,295,300,305)
 levelplot(tmp_slice ~ lon * lat, data=grid, at=cutpts, cuts=9, pretty=T, 
   col.regions=(rev(brewer.pal(9,"YlOrBr"))))
 ```
@@ -106,9 +106,9 @@ names(tmp_df01) <- c("lon","lat",paste(dname,as.character(m), sep="_"))
 
 
 ## Subset to Drake Passage 
-## [lon -> 240.00 : 300.00   | lat -> -89.00 : -15.00]
+## [lon -> 240.00 : 320.00   | lat -> -89.00 : -15.00]
 
-tmp_df01 <- tmp_df01[tmp_df01$lat <= -15 & tmp_df01$lon >= 240 & tmp_df01$lon <= 300,]
+tmp_df01 <- tmp_df01[tmp_df01$lat <= -15 & tmp_df01$lon >= 240 & tmp_df01$lon <= 320,]
 tmp_df01[tmp_df01 == 0] <- NA
 head(na.omit(tmp_df01), 10)
 ```
@@ -133,13 +133,19 @@ testr <- function(tmp_df){
   tmp_df ->> DP_tmp
 }
 testr(tmp_df)
-DP_tmp <- DP_tmp[DP_tmp$lat <= -15 & DP_tmp$lon >= 240 & DP_tmp$lon <= 300,]
+DP_tmp <- DP_tmp[DP_tmp$lat <= -15 & DP_tmp$lon >= 240 & DP_tmp$lon <= 320,]
 DP_tmp[DP_tmp == 0] <- NA
 
 head(na.omit(DP_tmp))
 
 write.csv(DP_tmp, "DrakePassageTemps.csv", row.names=FALSE)
 
+```
+Figures
+--------
+```{r fig.height=8, fig.width=14}
+months <- DP_tmp[-c(1,2)]
+boxplot(months, border = "steelblue4")
 ```
 
 
